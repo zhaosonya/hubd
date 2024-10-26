@@ -1,6 +1,5 @@
 #!/bin/bash
-# trojan-go WordPress一键安装脚本
-# Author: hijk<https://hijk.art>
+# trojan-go www一键安装脚本
 
 
 RED="\033[31m"      # Error message
@@ -77,14 +76,6 @@ statusText() {
         res=`ps aux | grep php | grep -v grep`
         [[ "$res" = "" ]] && echo -e -n ${RED}PHP未运行${PLAIN} || echo -e -n ${GREEN}PHP正在运行${PLAIN}
     fi
-    echo -n ", "
-    res=$(command -v mysql)
-    if [[ "$res" = "" ]]; then
-        echo -e -n ${RED}Mysql未安装${PLAIN}
-    else
-        res=`ps aux | grep mysql | grep -v grep`
-        [[ "$res" = "" ]] && echo -e -n ${RED}Mysql未运行${PLAIN} || echo -e -n ${GREEN}Mysql正在运行${PLAIN}
-    fi
 }
 
 installPHP() {
@@ -122,18 +113,6 @@ installWordPress() {
 }
 
 config() {
-    # config mariadb
-    systemctl start mariadb
-    DBNAME="wordpress"
-    DBUSER="wordpress"
-    DBPASS=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1`
-    mysql -uroot <<EOF
-DELETE FROM mysql.user WHERE User='';
-CREATE DATABASE $DBNAME default charset utf8mb4;
-CREATE USER ${DBUSER}@'%' IDENTIFIED BY '${DBPASS}';
-GRANT ALL PRIVILEGES ON ${DBNAME}.* to ${DBUSER}@'%';
-FLUSH PRIVILEGES;
-EOF
 
     # config wordpress
     cd /var/www/$DOMAIN
@@ -264,9 +243,6 @@ showInfo() {
     colorEcho $BLUE " WordPress配置信息："
     echo "==============================="
     echo -e "   ${BLUE}WordPress安装路径：${PLAIN}${RED}/var/www/${DOMAIN}${PLAIN}"
-    echo -e "   ${BLUE}WordPress数据库：${PLAIN}${RED}${DBNAME}${PLAIN}"
-    echo -e "   ${BLUE}WordPress数据库用户名：${PLAIN}${RED}${DBUSER}${PLAIN}"
-    echo -e "   ${BLUE}WordPress数据库密码：${PLAIN}${RED}${DBPASS}${PLAIN}"
     echo -e "   ${BLUE}WordPress网址：${PLAIN}${RED}$url${PLAIN}"
     echo "==============================="
 }
@@ -282,25 +258,15 @@ help() {
     colorEcho $GREEN "    启动: systemctl start $PHP_SERVICE"
     colorEcho $GREEN "    停止：systemctl stop $PHP_SERVICE"
     colorEcho $GREEN "    重启：systemctl restart $PHP_SERVICE"
-    echo " -------------"
-    colorEcho $BLUE "  Mysql操作："
-    colorEcho $GREEN "    启动: systemctl start mariadb"
-    colorEcho $GREEN "    停止：systemctl stop mariadb"
-    colorEcho $GREEN "    重启：systemctl restart mariadb"
 }
 
 menu() {
     clear
     echo "#############################################################"
-    echo -e "#                ${RED}WordPress一键安装脚本${PLAIN}                  #"
-    echo -e "# ${GREEN}作者${PLAIN}: 网络跳越(hijk)                                      #"
-    echo -e "# ${GREEN}网址${PLAIN}: https://hijk.art                                    #"
-    echo -e "# ${GREEN}论坛${PLAIN}: https://hijk.club                                   #"
-    echo -e "# ${GREEN}TG群${PLAIN}: https://t.me/hijkclub                               #"
-    echo -e "# ${GREEN}Youtube频道${PLAIN}: https://youtube.com/channel/UCYTB--VsObzepVJtc9yvUxQ #"
+    echo -e "#                ${RED}www一键安装脚本${PLAIN}                  #"
     echo "#############################################################"
     echo 
-    colorEcho $YELLOW " 该脚本仅适用于 https://hijk.art 网站上的trojan-go一键脚本安装wordpress用！"
+    colorEcho $YELLOW " 该脚本仅适用于网站上的trojan-go一键脚本安装wwww用！"
     echo 
     echo -e "  ${GREEN}1.${PLAIN} 安装WordPress" 
     echo -e "  ${GREEN}2.${PLAIN} 卸载WordPress"
