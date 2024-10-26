@@ -33,7 +33,7 @@ checkSystem() {
         CMD_INSTALL="apt install -y "
         CMD_REMOVE="apt remove -y "
         CMD_UPGRADE="apt update; apt upgrade -y; apt autoremove -y"
-        PHP_SERVICE="php8.3-fpm"
+        PHP_SERVICE="php7.4-fpm"
     else
         PMT="yum"
         CMD_INSTALL="yum install -y "
