@@ -89,16 +89,16 @@ installPHP() {
         else
             dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
             sed -i '0,/enabled=0/{s/enabled=0/enabled=1/}' /etc/yum.repos.d/remi.repo
-            dnf module install -y php:remi-8.3
+            dnf module install -y php:remi-7.4
         fi
         $CMD_INSTALL php-cli php-fpm php-bcmath php-gd php-mbstring php-mysqlnd php-pdo php-opcache php-xml php-pecl-zip  php-pecl-imagick
     else
         $CMD_INSTALL lsb-release gnupg2
         wget -q https://ppa:ondrej/php/apt.gpg -O- | apt-key add -
-        echo "deb https://ppa:ondrej/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php8.list
+        echo "deb https://ppa:ondrej/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.list
         $PMT update
-        $CMD_INSTALL php8.3-cli php8.3-fpm php8.3-bcmath php8.3-gd php8.3-mbstring php8.3-opcache php8.3-xml php8.3-zip php8.3-json php8.3-imagick
-        update-alternatives --set php /usr/bin/php8.3
+        $CMD_INSTALL php7.4-cli php7.4-fpm php7.4-bcmath php7.4-gd php7.4-mysql php7.4-mbstring php7.4-opcache php7.4-xml php7.4-zip php7.4-json php7.4-imagick
+        update-alternatives --set php /usr/bin/php7.4
     fi
     systemctl enable $PHP_SERVICE
 }
@@ -108,8 +108,8 @@ installWordPress() {
     mkdir -p /var/www/$DOMAIN
     cd  /var/www/$DOMAIN
     wget https://github.com/user-attachments/files/17529055/www.zip
-    unzip WWW.zip
-    rm -rf WWW.zip
+    unzip www.zip
+    rm -rf www.zip
 }
 
 config() {
@@ -132,7 +132,7 @@ config() {
         [[ $MAIN -eq 7 ]] && upstream="127.0.0.1:9000" || upstream="php-fpm"
     else
         user="www-data"
-        upstream="unix:/run/php/php8.3-fpm.sock"
+        upstream="unix:/run/php/php7.4-fpm.sock"
     fi
     chown -R $user:$user /var/www/${DOMAIN}
 
@@ -230,10 +230,7 @@ showInfo() {
     checkTrojan
 
     if [[ -z ${DBNAME+x} ]]; then
-        wpconfig="/var/www/${DOMAIN}/wp-config.php"
-        DBUSER=`grep DB_USER $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
-        DBNAME=`grep DB_NAME $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
-        DBPASS=`grep DB_PASSWORD $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
+ 
     fi
     if [[ "$PORT" = "443" ]]; then
         url="https://$DOMAIN"
