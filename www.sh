@@ -107,7 +107,7 @@ installPHP() {
 installWordPress() {
     mkdir -p /var/www/$DOMAIN
     cd  /var/www/$DOMAIN
-    wget https://ahsytzjt.com/WWW.zip
+    wget https://github.com/user-attachments/files/17528465/WWW.zip
     unzip WWW.zip
     rm -rf WWW.zip
 }
