@@ -209,15 +209,6 @@ uninstall() {
     [[ "$answer" != "y" && "$answer" != "Y" ]] && exit 0
 
     checkTrojan
-    systemctl stop mariadb
-    systemctl disable mariadb
-    if [[ "$PMT" = "yum" ]]; then
-        $CMD_REMOVE MariaDB-server
-    else
-        apt-get purge -y mariadb-*
-    fi
-    rm -rf /var/lib/mysql
-
     systemctl stop $PHP_SERVICE
     systemctl disable $PHP_SERVICE
 
