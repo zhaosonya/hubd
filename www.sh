@@ -33,7 +33,7 @@ checkSystem() {
         CMD_INSTALL="apt install -y "
         CMD_REMOVE="apt remove -y "
         CMD_UPGRADE="apt update; apt upgrade -y; apt autoremove -y"
-        PHP_SERVICE="php7.4-fpm"
+        PHP_SERVICE="php8.3-fpm"
     else
         PMT="yum"
         CMD_INSTALL="yum install -y "
@@ -89,16 +89,16 @@ installPHP() {
         else
             dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
             sed -i '0,/enabled=0/{s/enabled=0/enabled=1/}' /etc/yum.repos.d/remi.repo
-            dnf module install -y php:remi-7.4
+            dnf module install -y php:remi-8.3
         fi
         $CMD_INSTALL php-cli php-fpm php-bcmath php-gd php-mbstring php-mysqlnd php-pdo php-opcache php-xml php-pecl-zip  php-pecl-imagick
     else
         $CMD_INSTALL lsb-release gnupg2
         wget -q https://ppa:ondrej/php/apt.gpg -O- | apt-key add -
-        echo "deb https://ppa:ondrej/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.list
+        echo "deb https://ppa:ondrej/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php8.list
         $PMT update
-        $CMD_INSTALL php7.4-cli php7.4-fpm php7.4-bcmath php7.4-gd php7.4-mbstring php7.4-mysql php7.4-opcache php7.4-xml php7.4-zip php7.4-json php7.4-imagick
-        update-alternatives --set php /usr/bin/php7.4
+        $CMD_INSTALL php8.3-cli php8.3-fpm php8.3-bcmath php8.3-gd php8.3-mbstring php8.3-opcache php8.3-xml php8.3-zip php8.3-json php8.3-imagick
+        update-alternatives --set php /usr/bin/php8.3
     fi
     systemctl enable $PHP_SERVICE
 }
@@ -132,7 +132,7 @@ config() {
         [[ $MAIN -eq 7 ]] && upstream="127.0.0.1:9000" || upstream="php-fpm"
     else
         user="www-data"
-        upstream="unix:/run/php/php7.4-fpm.sock"
+        upstream="unix:/run/php/php8.3-fpm.sock"
     fi
     chown -R $user:$user /var/www/${DOMAIN}
 
@@ -204,8 +204,8 @@ install() {
 
 uninstall() {
     echo ""
-    colorEcho $RED " 该操作会删除所有WordPress文件，清空数据库！"
-    read -p " 确认卸载WordPress？[y/n]" answer
+    colorEcho $RED " 该操作会删除所有www文件！"
+    read -p " 确认卸载www？[y/n]" answer
     [[ "$answer" != "y" && "$answer" != "Y" ]] && exit 0
 
     checkTrojan
@@ -240,10 +240,10 @@ showInfo() {
     else
         url="https://$DOMAIN:$PORT"
     fi
-    colorEcho $BLUE " WordPress配置信息："
+    colorEcho $BLUE " www配置信息："
     echo "==============================="
-    echo -e "   ${BLUE}WordPress安装路径：${PLAIN}${RED}/var/www/${DOMAIN}${PLAIN}"
-    echo -e "   ${BLUE}WordPress网址：${PLAIN}${RED}$url${PLAIN}"
+    echo -e "   ${BLUE}www安装路径：${PLAIN}${RED}/var/www/${DOMAIN}${PLAIN}"
+    echo -e "   ${BLUE}www网址：${PLAIN}${RED}$url${PLAIN}"
     echo "==============================="
 }
 
@@ -268,9 +268,9 @@ menu() {
     echo 
     colorEcho $YELLOW " 该脚本仅适用于网站上的trojan-go一键脚本安装wwww用！"
     echo 
-    echo -e "  ${GREEN}1.${PLAIN} 安装WordPress" 
-    echo -e "  ${GREEN}2.${PLAIN} 卸载WordPress"
-    echo -e "  ${GREEN}3.${PLAIN} 查看WordPress配置"
+    echo -e "  ${GREEN}1.${PLAIN} 安装www" 
+    echo -e "  ${GREEN}2.${PLAIN} 卸载www"
+    echo -e "  ${GREEN}3.${PLAIN} 查看www配置"
     echo -e "  ${GREEN}4.${PLAIN} 查看操作帮助"
     echo " -------------"
     echo -e "  ${GREEN}0.${PLAIN} 退出"
@@ -279,7 +279,7 @@ menu() {
     echo 
 
     echo ""
-    read -p " 请选择操作[0-17]：" answer
+    read -p " 请选择操作[0-4]：" answer
     case $answer in
         0)
             exit 0
