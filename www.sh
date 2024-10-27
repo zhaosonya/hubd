@@ -111,7 +111,7 @@ installWordPress() {
     	colorEcho $RED " 下载失败，请稍后重试"
 	    exit 1
     fi
-    unzip www.zip
+    unzip -q www.zip
     rm -rf /var/www/$DOMAIN
     mv www /var/www/$DOMAIN
     rm -rf www.zip
@@ -187,7 +187,7 @@ install() {
 
     config
     # restart service
-    systemctl restart $PHP_SERVICE mariadb nginx
+    systemctl restart $PHP_SERVICE nginx
 
     sleep 2
     statusText
