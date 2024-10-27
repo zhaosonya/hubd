@@ -220,12 +220,6 @@ uninstall() {
 showInfo() {
     checkTrojan
 
-    if [[ -z ${DBNAME+x} ]]; then
-         wpconfig="/var/www/${DOMAIN}/wp-config.php"
-        DBUSER=`grep DB_USER $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
-        DBNAME=`grep DB_NAME $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
-        DBPASS=`grep DB_PASSWORD $wpconfig | cut -d, -f2 | cut -d\) -f1 | tr -d \",\'' '`
-    fi
     if [[ "$PORT" = "443" ]]; then
         url="https://$DOMAIN"
     else
