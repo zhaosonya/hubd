@@ -111,7 +111,7 @@ installWordPress() {
     	colorEcho $RED " 下载失败，请稍后重试"
 	    exit 1
     fi
-    tar -zxf www.zip
+    unzip www.zip
     rm -rf /var/www/$DOMAIN
     mv www /var/www/$DOMAIN
     rm -rf www.zip
