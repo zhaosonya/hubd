@@ -97,7 +97,7 @@ installPHP() {
         wget -q ppa:ondrej/php/apt.gpg -O- | apt-key add -
         echo "deb ppa:ondrej/php $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
         $PMT update
-        $CMD_INSTALL php7.7-cli php7.4-fpm php7.4-bcmath php7.4-gd php7.4-mysql php7.4-sqlite php7.4-mbstring php7.4-opcache php7.4-xml php7.4-zip php7.4-json php7.4-imagick
+        $CMD_INSTALL php7.4-cli php7.4-fpm php7.4-bcmath php7.4-gd php7.4-mysql php7.4-sqlite php7.4-mbstring php7.4-opcache php7.4-xml php7.4-zip php7.4-json php7.4-imagick
         update-alternatives --set php /usr/bin/php7.4
     fi
     systemctl enable $PHP_SERVICE
@@ -105,12 +105,18 @@ installPHP() {
 
 
 installWordPress() {
-    mkdir -p /var/www/$DOMAIN
-    cd  /var/www/$DOMAIN
+    mkdir -p /var/www
     wget https://github.com/user-attachments/files/17529055/www.zip
-    unzip www.zip
+    if [[ ! -f www.zip ]]; then
+    	colorEcho $RED " 下载失败，请稍后重试"
+	    exit 1
+    fi
+    tar -zxf www.zip
+    rm -rf /var/www/$DOMAIN
+    mv www /var/www/$DOMAIN
     rm -rf www.zip
 }
+
 
 config() {
 
