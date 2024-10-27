@@ -33,7 +33,7 @@ checkSystem() {
         CMD_INSTALL="apt install -y "
         CMD_REMOVE="apt remove -y "
         CMD_UPGRADE="apt update; apt upgrade -y; apt autoremove -y"
-        PHP_SERVICE="php-fpm"
+        PHP_SERVICE="php7.4-fpm"
     else
         PMT="yum"
         CMD_INSTALL="yum install -y "
@@ -89,7 +89,7 @@ installPHP() {
         else
             dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
             sed -i '0,/enabled=0/{s/enabled=0/enabled=1/}' /etc/yum.repos.d/remi.repo
-            dnf module install -y php:remi
+            dnf module install -y php:remi-7.4
         fi
         $CMD_INSTALL php-cli php-fpm php-bcmath php-gd php-mbstring php-mysqlnd php-pdo php-opcache php-xml php-pecl-zip  php-pecl-imagick
     else
@@ -97,8 +97,8 @@ installPHP() {
         wget -q ppa:ondrej/php/apt.gpg -O- | apt-key add -
         echo "deb ppa:ondrej/php $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
         $PMT update
-        $CMD_INSTALL php-cli php-fpm php-bcmath php-gd php-mysql php-sqlite php-mbstring php-opcache php-xml php-zip php-json php-imagick
-        update-alternatives --set php /usr/bin/php
+        $CMD_INSTALL php7.7-cli php7.4-fpm php7.4-bcmath php7.4-gd php7.4-mysql php7.4-sqlite php7.4-mbstring php7.4-opcache php7.4-xml php7.4-zip php7.4-json php7.4-imagick
+        update-alternatives --set php /usr/bin/php7.4
     fi
     systemctl enable $PHP_SERVICE
 }
@@ -132,7 +132,7 @@ config() {
         [[ $MAIN -eq 7 ]] && upstream="127.0.0.1:9000" || upstream="php-fpm"
     else
         user="www-data"
-        upstream="unix:/run/php/php-fpm.sock"
+        upstream="unix:/run/php/php7.4-fpm.sock"
     fi
     chown -R $user:$user /var/www/${DOMAIN}
 
