@@ -114,18 +114,6 @@ installWordPress() {
 
 config() {
 
-    # config wordpress
-    cd /var/www/$DOMAIN
-    #sed -i "1a \$_SERVER['HTTPS']='on';" index.php
-    perl -i -pe'
-  BEGIN {
-    @chars = ("a" .. "z", "A" .. "Z", 0 .. 9);
-    push @chars, split //, "!@#$%^&*()-_ []{}<>~\`+=,.;:/?|";
-    sub salt { join "", map $chars[ rand @chars ], 1 .. 64 }
-  }
-  s/put your unique phrase here/salt()/ge
-' wp-config.php
-
     if [[ "$PMT" = "yum" ]]; then
         user="apache"
         # config nginx
@@ -182,7 +170,7 @@ EOF
     sed -i -e "s/fallback_port\":\s*[0-9]*/fallback_port\": 8080/" $CONFIG_FILE
 
     # restart service
-    systemctl restart $PHP_SERVICE mariadb nginx trojan-go
+    systemctl restart $PHP_SERVICE nginx trojan-go
 }
 
 install() {
